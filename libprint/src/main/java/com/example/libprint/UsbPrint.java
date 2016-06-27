@@ -7,6 +7,7 @@ package com.example.libprint;
 import android.content.Context;
 
 import rego.printlib.export.regoPrinter;
+
 public class UsbPrint {
     private regoPrinter printer;
     private int myState = 0;

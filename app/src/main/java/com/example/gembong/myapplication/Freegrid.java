@@ -8,15 +8,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.Toast;
+
 
 /**
  * Created by gembong on 6/10/16.
  */
 public class Freegrid extends FrameLayout {
     DataSetObserver dataSetObserver;
-    Click listener;
-    LongClick l;
+
+    private AdapterView.OnItemClickListener clickListener;
+    private AdapterView.OnItemLongClickListener longClickListener;
+
+    private MyClickListener localClickListener;
+    private LongClickListener longClick;
+
 
     public Freegrid(Context context) {
         super(context);
@@ -30,6 +37,7 @@ public class Freegrid extends FrameLayout {
     public Freegrid(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
 
     private void init() {
         dataSetObserver = new DataSetObserver() {
@@ -46,6 +54,9 @@ public class Freegrid extends FrameLayout {
     }
 
     public void setAdapter(BaseAdapter adapter) {
+        localClickListener = new MyClickListener();
+        longClick = new LongClickListener();
+
         if (!(adapter instanceof PositionProfider)) {
             Exception e = new Exception();
             try {
@@ -59,29 +70,46 @@ public class Freegrid extends FrameLayout {
             View v = adapter.getView(i, null, this);
             Rect rect = ((PositionProfider) adapter).getPositionRect(i);
             addView(v);
+            dispatchSetPressed(true);
             LayoutParams lp = (LayoutParams) v.getLayoutParams();
             lp.width = rect.width();
             lp.height = rect.height();
             v.setLayoutParams(lp);
             v.setTranslationX(rect.left);
             v.setTranslationY(rect.top);
+            v.setOnClickListener(localClickListener);
+            v.setOnLongClickListener(longClick);
+//            v.setOnDragListener(new OnDragListener);
         }
     }
-    public interface Click{
-        void onItemClick(AdapterView<?> parent, View view, int position, long id);
+
+    private class MyClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onItemClick(null, v, indexOfChild(v), v.getId());
+        }
     }
 
-    public interface LongClick{
-        void onItemLongClick(AdapterView<?> parent, View view, int position, long id);
+    private class LongClickListener implements OnLongClickListener{
+
+        @Override
+        public boolean onLongClick(View v) {
+            longClickListener.onItemLongClick(null,v,indexOfChild(v),v.getId());
+            return true;
+        }
     }
-    public void setOnItemClickListener(Click click) {
-        listener = click;
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener click) {
+        longClickListener = click;
     }
 
-    public void setOnItemLongClickListener(LongClick click){
-        l = click;
+    public void setOnItemClickListener(AdapterView.OnItemClickListener click) {
+        clickListener = click;
     }
+    public boolean createNewItem(){
+
+        return true;
+    }
+
+
 }
-
-
-
