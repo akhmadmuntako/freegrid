@@ -3,13 +3,20 @@ package com.example.gembong.myapplication;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Rect;
+import android.text.Layout;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.OverScroller;
 import android.widget.Toast;
+
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 
 /**
@@ -23,7 +30,6 @@ public class Freegrid extends FrameLayout {
 
     private MyClickListener localClickListener;
     private LongClickListener longClick;
-
 
     public Freegrid(Context context) {
         super(context);
@@ -79,9 +85,9 @@ public class Freegrid extends FrameLayout {
             v.setTranslationY(rect.top);
             v.setOnClickListener(localClickListener);
             v.setOnLongClickListener(longClick);
-//            v.setOnDragListener(new OnDragListener);
         }
     }
+
 
     private class MyClickListener implements OnClickListener {
 
@@ -91,14 +97,15 @@ public class Freegrid extends FrameLayout {
         }
     }
 
-    private class LongClickListener implements OnLongClickListener{
+    private class LongClickListener implements OnLongClickListener {
 
         @Override
         public boolean onLongClick(View v) {
-            longClickListener.onItemLongClick(null,v,indexOfChild(v),v.getId());
+            longClickListener.onItemLongClick(null, v, indexOfChild(v), v.getId());
             return true;
         }
     }
+
     public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener click) {
         longClickListener = click;
     }
@@ -106,10 +113,41 @@ public class Freegrid extends FrameLayout {
     public void setOnItemClickListener(AdapterView.OnItemClickListener click) {
         clickListener = click;
     }
-    public boolean createNewItem(){
 
+    public boolean createNewItem() {
+        //                Dialog d = new Dialog(MainActivity.this,0);
+//
+//                d.setContentView(R.layout.new_item);
+//                d.setTitle("Create new Item");
+//
+//                final EditText leftEdit = (EditText)d.findViewById(R.id.left);
+//                final EditText topEdit = (EditText)d.findViewById(R.id.top);
+//                final EditText rightEdit = (EditText)d.findViewById(R.id.right);
+//                final EditText buttomEdit = (EditText)d.findViewById(R.id.bottom);
+//                Button createButton = (Button) d.findViewById(R.id.create_button);
+//                Button cancelButton = (Button) d.findViewById(R.id.cancel_button);
+//                // if button create is clicked, create new item
+//                createButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        try {
+//                            int L = Integer.parseInt(String.valueOf(leftEdit.getText()));
+//                            int T = Integer.parseInt(String.valueOf(topEdit.getText()));
+//                            int R = Integer.parseInt(String.valueOf(rightEdit.getText()));
+//                            int B = Integer.parseInt(String.valueOf(buttomEdit.getText()));
+//                            Rect rect = new Rect(L, T, R, B);
+////                        ArrayList<Rect> rects = new ArrayList<>();
+//                            rects.add(rect);
+//                            adapter.setRects(rects);
+////                        freegrid.re
+//                        }catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                d.show();
         return true;
     }
-
-
 }
+
+
