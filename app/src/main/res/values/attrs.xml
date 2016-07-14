@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="checked_item" format="integer"/>
+    <attr name="orientation" format="string"/>
+    <attr name="radiogroup_mode" format="boolean"/>
+
+    <declare-styleable name="CheckableItemGroup">
+        <attr name="android:orientation" />
+        <attr name="radiogroup_mode" />
+        <attr name="checked_item" />
+    </declare-styleable>
+
+    <declare-styleable name="CheckableView">
+        <attr name="android:checked" />
+        <attr name="cv_checkedImage" format="reference" />
+        <attr name="cv_normalImage" format="reference" />
+        <attr name="cv_checkedColor" format="reference|color" />
+        <attr name="cv_normalColor" format="reference|color" />
+        <attr name="cv_borderColor" format="reference|color" />
+        <attr name="cv_borderWidth" format="integer" />
+        <attr name="cv_borderRadius" format="float" />
+        <attr name="cv_label" format="reference|string" />
+        <attr name="cv_labelTextColor" format="reference|color" />
+        <attr name="cv_normalBackgroundColor" format="reference|color" />
+        <attr name="cv_checkedBackgroundColor" format="reference|color" />
+        <attr name="cv_animationDuration" format="integer" />
+        <attr name="cv_checkmarkColor" format="reference|color" />
+        <attr name="cv_checkmarkPosition" format="enum">
+            <enum name="topLeft" value="0" />
+            <enum name="topRight" value="1" />
+            <enum name="center" value="2" />
+            <enum name="bottomLeft" value="3" />
+            <enum name="bottomRight" value="4" />
+        </attr>
+        <attr name="cv_isChecked" format="boolean" />
+    </declare-styleable>
+
+
+</resources>
+

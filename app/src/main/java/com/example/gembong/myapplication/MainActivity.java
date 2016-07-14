@@ -1,31 +1,20 @@
 package com.example.gembong.myapplication;
 
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.OverScroller;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
-
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 
 public class MainActivity extends AppCompatActivity {
     private android.widget.LinearLayout.LayoutParams layoutParams;
@@ -49,89 +38,44 @@ public class MainActivity extends AppCompatActivity {
         final MyAdapter adapter = new MyAdapter();
         adapter.setRects(rects);
 
-        CustomScrollView scrollView = new CustomScrollView(this);
+        PanningView scrollView = new PanningView(this);
 
         final Freegrid freegrid = (Freegrid) findViewById(R.id.a);
         freegrid.setAdapter(adapter);
-
-
-//        ViewParent parent = view.getParent();
-
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.HORIZONTAL);
-//        for (int i = 0;i<3;i++) {
-//            View view = new View(this);
-//
-////            layout.addView(view, new LinearLayout.LayoutParams(1280, 720));
-//            ImageView iv = new ImageView(this);
-//            iv.setImageResource(R.drawable.ic_launcher);
-//            iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//            layout.addView(view, new LinearLayout.LayoutParams(1280, 720));
-//        }
         View view = findViewById(R.id.main);
+
         if(view.getParent()!=null)
             ((ViewGroup)view.getParent()).removeView(view);
+
         layout.addView(view, new LinearLayout.LayoutParams(1280,2400));
         scrollView.addView(layout);
-//        scrollView.setLayoutParams(new LinearLayout.LayoutParams(3600, 2400));
         setContentView(scrollView);
 
         freegrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "posisi : " + position, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "posisi : " + position, Toast.LENGTH_SHORT).show();
+
             }
         });
         freegrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "long posisi : " + position, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
-
-
-
-//        freegrid.setOnLongClickListener(new AdapterView.OnLongClickListener() {
+//        freegrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //            @Override
-//            public boolean onLongClick(View v) {
-//                ClipData.Item item = new ClipData.Item((CharSequence) v.getTag());
-//                String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
-//                ClipData dragData = new ClipData((CharSequence) v.getTag(), mimeTypes, item);
-//                View.DragShadowBuilder myShadow = new View.DragShadowBuilder(freegrid);
-//                v.startDrag(dragData, myShadow, null, 0);
-//                v.setVisibility(View.INVISIBLE);
-//                Toast.makeText(MainActivity.this, "toas", Toast.LENGTH_SHORT).show();
-//                OverScrollDecoratorHelper.setUpStaticOverScroll(v, OverScrollDecoratorHelper.ORIENTATION_HORIZONTAL);
-//                int curX = mScroller.getCurrX();
-//                int curY = mScroller.getCurrY();
-//                float velocity = mScroller.getCurrVelocity();
-//                freegrid.setX(curX);
-//                freegrid.setY(curY);
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(MainActivity.this, "long posisi : " + position, Toast.LENGTH_SHORT).show();
+//                freegrid.createNewItem(adapter,rects);
 //                return true;
 //            }
 //        });
-//        freegrid.setOnDragListener(new MyDragListener());
-//
-//        freegrid.setOnTouchListener(new View.OnTouchListener() {
-//
-//            CustomScrollView customScrollView = new CustomScrollView(MainActivity.this);
-//
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    ClipData data = ClipData.newPlainText("", "");
-//                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(freegrid);
-//                    freegrid.startDrag(data, shadowBuilder, freegrid, 0);
-//                    freegrid.setVisibility(View.INVISIBLE);
-//                } else {
-//                    return false;
-//                }
-//                return true;
-//            }
-//        });
+
     }
-
 
     class MyDragListener implements View.OnDragListener {
 
@@ -174,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                     v.setVisibility(View.VISIBLE);
                     break;
             }
-//            }while (action !=0);
             return true;
         }
     }

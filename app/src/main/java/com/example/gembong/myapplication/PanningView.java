@@ -18,8 +18,10 @@ import android.widget.OverScroller;
 /**
  * Created by Lenovo on 28/06/2016.
  */
-public class CustomScrollView extends FrameLayout{
+public class PanningView extends FrameLayout {
 
+    private static final String TAG = "";
+    //Panning used
     //Fling components
     private OverScroller mScroller;
     private VelocityTracker mVelocityTracker;
@@ -34,19 +36,25 @@ public class CustomScrollView extends FrameLayout{
     private boolean mDragging = false;
 
 
-    public CustomScrollView(Context context) {
+    MyGestureListener gestureListener = new MyGestureListener();
+    final ScaleGestureDetector scaleDetector;
+
+    public PanningView(Context context) {
         super(context);
         init(context);
+        scaleDetector = new ScaleGestureDetector(context, gestureListener);
     }
 
-    public CustomScrollView(Context context, AttributeSet attrs) {
+    public PanningView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
+        scaleDetector = new ScaleGestureDetector(context, gestureListener);
     }
 
-    public CustomScrollView(Context context, AttributeSet attrs, int defStyle) {
+    public PanningView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
+        scaleDetector = new ScaleGestureDetector(context, gestureListener);
     }
 
     private void init(Context context) {
@@ -57,6 +65,17 @@ public class CustomScrollView extends FrameLayout{
         mMaximumVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
         mMinimumVelocity = ViewConfiguration.get(context).getScaledMinimumFlingVelocity();
 
+////        scaleDetector.onTouchEvent()
+//        if ((mode == Mode.DRAG && scale >= MIN_ZOOM) || mode == Mode.ZOOM) {
+//            getParent().requestDisallowInterceptTouchEvent(true);
+//            float maxDx = (child().getWidth() - (child().getWidth() / scale)) / 2 * scale;
+//            float maxDy = (child().getHeight() - (child().getHeight() / scale)) / 2 * scale;
+//            dx = Math.min(Math.max(dx, -maxDx), maxDx);
+//            dy = Math.min(Math.max(dy, -maxDy), maxDy);
+//            Log.i(TAG, "Width: " + child().getWidth() + ", scale " + scale + ", dx " + dx
+//                    + ", max " + maxDx);
+//            applyScaleAndTranslation();
+//        }
     }
 
 
@@ -179,49 +198,55 @@ public class CustomScrollView extends FrameLayout{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mVelocityTracker.addMovement(event);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // We've already stored the initial point,
+                        // but if we got here a child view didn't capture
+                        // the event, so we need to.
+                        Log.i(TAG, "DOWN");
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        final float x = event.getX();
+                        final float y = event.getY();
+                        float deltaY = mLastTouchY - y;
+                        float deltaX = mLastTouchX - x;
+                        //Check for slop on direct events
+                        if (!mDragging && (Math.abs(deltaY) > mTouchSlop || Math.abs(deltaX) > mTouchSlop)) {
+                            mDragging = true;
+                        }
+                        if (mDragging) {
+                            //Scroll the view
+                            scrollBy((int) deltaX, (int) deltaY);
+                            //Update the last touch event
+                            mLastTouchX = x;
+                            mLastTouchY = y;
+                        }
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                // We've already stored the initial point,
-                // but if we got here a child view didn't capture
-                // the event, so we need to.
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                final float x = event.getX();
-                final float y = event.getY();
-                float deltaY = mLastTouchY - y;
-                float deltaX = mLastTouchX - x;
-                //Check for slop on direct events
-                if (!mDragging && (Math.abs(deltaY) > mTouchSlop || Math.abs(deltaX) > mTouchSlop) ) {
-                    mDragging = true;
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mDragging = false;
+                        //Stop any flinging in progress
+                        if (!mScroller.isFinished()) {
+                            mScroller.abortAnimation();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mDragging = false;
+                        // Compute the current velocity and start a fling if it is above
+                        // the minimum threshold.
+                        mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                        int velocityX = (int) mVelocityTracker.getXVelocity();
+                        int velocityY = (int) mVelocityTracker.getYVelocity();
+                        if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
+                            fling(-velocityX, -velocityY);
+                        }
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        break;
                 }
-                if (mDragging) {
-                    //Scroll the view
-                    scrollBy((int) deltaX, (int) deltaY);
-                    //Update the last touch event
-                    mLastTouchX = x;
-                    mLastTouchY = y;
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                mDragging = false;
-                //Stop any flinging in progress
-                if (!mScroller.isFinished()) {
-                    mScroller.abortAnimation();
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                mDragging = false;
-                // Compute the current velocity and start a fling if it is above
-                // the minimum threshold.
-                mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                int velocityX = (int)mVelocityTracker.getXVelocity();
-                int velocityY = (int)mVelocityTracker.getYVelocity();
-                if (Math.abs(velocityX) > mMinimumVelocity || Math.abs(velocityY) > mMinimumVelocity) {
-                    fling(-velocityX, -velocityY);
-                }
-                break;
-        }
+
         return super.onTouchEvent(event);
     }
 
@@ -265,14 +290,49 @@ public class CustomScrollView extends FrameLayout{
              */
             return 0;
         }
-        if ((my+n) > child) {
+        if ((my + n) > child) {
             /* this case:
              *                    |------ me ------|
              *     |------ child ------|
              *     |-- mScrollX --|
              */
-            return child-my;
+            return child - my;
         }
         return n;
+    }
+
+
+    class MyGestureListener implements ScaleGestureDetector.OnScaleGestureListener {
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scaleFactor = detector.getScaleFactor();
+            Log.i(TAG, "onScale" + scaleFactor);
+//            if (lastScaleFactor == 0 || (Math.signum(scaleFactor) == Math.signum(lastScaleFactor))) {
+//                scale *= scaleFactor;
+//                scale = Math.max(MIN_ZOOM, Math.min(scale, MAX_ZOOM));
+//                lastScaleFactor = scaleFactor;
+//            } else {
+//                lastScaleFactor = 0;
+//            }
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            Log.i(TAG, "onScaleBegin");
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            Log.i(TAG, "onScaleEnd");
+        }
+    }
+
+    private View child() {
+        View view = findViewById(R.id.main);
+        return view;
+//        return getChildAt(0);
     }
 }

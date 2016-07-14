@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="cv_gray">#3C494D</color>
+    <color name="cv_gray_light">#414141</color>
+    <color name="cv_gray_lightest">#BFC5C5</color>
+    <color name="cv_gray_super_light">#F0F4F5</color>
+    <color name="cv_green">#29DA9F</color>
+    <color name="cv_white">#FFFFFF</color>
+    <color name="shadow">#20000000</color>
 </resources>

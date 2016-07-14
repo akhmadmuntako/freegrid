@@ -1,28 +1,32 @@
 package com.example.gembong.myapplication;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Rect;
 import android.text.Layout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.GridView;
-import android.widget.OverScroller;
 import android.widget.Toast;
 
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
+import java.util.ArrayList;
+
 
 
 /**
  * Created by gembong on 6/10/16.
  */
-public class Freegrid extends FrameLayout {
+public class Freegrid extends FrameLayout implements CheckableView.OnCheckedChangeListener, CheckableGroup.OnCheckedChangeListener{
     DataSetObserver dataSetObserver;
 
     private AdapterView.OnItemClickListener clickListener;
@@ -71,6 +75,7 @@ public class Freegrid extends FrameLayout {
                 e1.printStackTrace();
             }
         }
+
         adapter.registerDataSetObserver(dataSetObserver);
         for (int i = 0; i < adapter.getCount(); i++) {
             View v = adapter.getView(i, null, this);
@@ -88,12 +93,22 @@ public class Freegrid extends FrameLayout {
         }
     }
 
+    @Override
+    public void onCheckedChanged(CheckableView checkableView, boolean isChecked) {
+        Log.v(checkableView.getClass().getName(), "CheckableView at (" + checkableView.getId() + ") is checked: " + isChecked);
+    }
+
+    @Override
+    public void onCheckedChanged(CheckableGroup checkableGroup, CheckableView checkableView, boolean isChecked) {
+        Log.v(checkableView.getClass().getName(), "CheckableView at (" + checkableView.getId() + ") in group (" +
+                checkableGroup.getId() + ") is checked: " + isChecked);
+    }
+
 
     private class MyClickListener implements OnClickListener {
-
         @Override
         public void onClick(View v) {
-            clickListener.onItemClick(null, v, indexOfChild(v), v.getId());
+//            clickListener.onItemClick(null, v, indexOfChild(v), v.getId());
         }
     }
 
@@ -114,38 +129,50 @@ public class Freegrid extends FrameLayout {
         clickListener = click;
     }
 
-    public boolean createNewItem() {
-        //                Dialog d = new Dialog(MainActivity.this,0);
-//
-//                d.setContentView(R.layout.new_item);
-//                d.setTitle("Create new Item");
-//
-//                final EditText leftEdit = (EditText)d.findViewById(R.id.left);
-//                final EditText topEdit = (EditText)d.findViewById(R.id.top);
-//                final EditText rightEdit = (EditText)d.findViewById(R.id.right);
-//                final EditText buttomEdit = (EditText)d.findViewById(R.id.bottom);
-//                Button createButton = (Button) d.findViewById(R.id.create_button);
-//                Button cancelButton = (Button) d.findViewById(R.id.cancel_button);
-//                // if button create is clicked, create new item
-//                createButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            int L = Integer.parseInt(String.valueOf(leftEdit.getText()));
-//                            int T = Integer.parseInt(String.valueOf(topEdit.getText()));
-//                            int R = Integer.parseInt(String.valueOf(rightEdit.getText()));
-//                            int B = Integer.parseInt(String.valueOf(buttomEdit.getText()));
-//                            Rect rect = new Rect(L, T, R, B);
-////                        ArrayList<Rect> rects = new ArrayList<>();
-//                            rects.add(rect);
-//                            adapter.setRects(rects);
-////                        freegrid.re
-//                        }catch (Exception e){
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//                d.show();
+    public boolean createNewItem(final MainActivity.MyAdapter adapter, final ArrayList<Rect> rects) {
+            final Dialog d = new Dialog(getContext(),0);
+
+                d.setContentView(R.layout.new_item);
+                d.setTitle("Create new Item");
+
+                final EditText leftEdit = (EditText)d.findViewById(R.id.left);
+                final EditText topEdit = (EditText)d.findViewById(R.id.top);
+                final EditText rightEdit = (EditText)d.findViewById(R.id.right);
+                final EditText buttomEdit = (EditText)d.findViewById(R.id.bottom);
+                Button createButton = (Button) d.findViewById(R.id.create_button);
+                Button cancelButton = (Button) d.findViewById(R.id.cancel_button);
+                // if button create is clicked, create new item
+                createButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            int L = Integer.parseInt(String.valueOf(leftEdit.getText()));
+                            int T = Integer.parseInt(String.valueOf(topEdit.getText()));
+                            int R = Integer.parseInt(String.valueOf(rightEdit.getText()));
+                            int B = Integer.parseInt(String.valueOf(buttomEdit.getText()));
+                            if(R >L && B > T){
+                            Rect rect = new Rect(L, T, R, B);
+                            rects.add(rect);
+                            adapter.setRects(rects);
+                            adapter.unregisterDataSetObserver(dataSetObserver);
+                            setAdapter(adapter);
+                            d.dismiss();
+                            }else {
+                                Toast.makeText(getContext(),"Righ must bigger than Left and \n Bottom must bigger than Top",Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+                cancelButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        d.dismiss();
+                    }
+                });
+                d.show();
         return true;
     }
 }

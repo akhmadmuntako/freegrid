@@ -1,7 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--tools:context=".MainActivity">-->
+
+<!--<com.example.gembong.myapplication.CheckableItemGroup xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"--><!--android:layout_height="100dp"--><!--android:orientation="horizontal"--><!--app:radiogroup_mode="true">-->
+
+<com.example.gembong.myapplication.CheckableItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
     android:layout_width="20sp"
-    android:background="@color/colorPrimary"
     android:layout_height="20sp"
+    android:background="@color/colorPrimary"
+    android:clickable="true"
     android:focusable="false"
-    android:clickable="true"/>
+    >
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+        <!--<ImageView-->
+            <!--android:layout_width="5sp"-->
+            <!--android:layout_height="5sp"-->
+            <!--android:src="@drawable/ic_check"-->
+            <!--android:foregroundGravity="center_horizontal|center_vertical"-->
+            <!--android:visibility="visible"/>-->
+
+    <!--</RelativeLayout>-->
+</com.example.gembong.myapplication.CheckableItemView>
+
+
+
+
