@@ -3,20 +3,36 @@
     package="co.zakuna.retrofit">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
+        android:name=".tiket_belumjadi.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/kereta"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserActivity">
+        <activity android:name=".tiket_belumjadi.Activity.StasiunActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".tiket_belumjadi.Activity.IsiDataActivity">
+        </activity>
+        <activity android:name=".tiket_belumjadi.Activity.FullActivity"/>
+        <activity android:name=".tiket_belumjadi.Activity.SpesificActivity"/>
+        <receiver
+            android:name=".tiket_belumjadi.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

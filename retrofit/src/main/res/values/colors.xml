@@ -8,7 +8,13 @@
     <color name="colorAccentDark">#00B482</color>
 
     <color name="colorBlack">#555555</color>
-    <color name="colorWhite">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="colorGrey">#707070</color>
     <color name="colorGreyLight">#8A8A8A</color>
+    <color name="black">#000000</color>
+
+    <item name="transparent" type="color">#00FFFFFF</item>
+    <item name="grey" type="color">#555555</item>
+    <item name="green" type="color">#4499CC00</item>
+    <item name="darkgreen" type="color">#FF669900</item>
 </resources>
