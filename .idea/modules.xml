@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/espresso/espresso.iml" filepath="$PROJECT_DIR$/espresso/espresso.iml" />
       <module fileurl="file://$PROJECT_DIR$/freegrid.iml" filepath="$PROJECT_DIR$/freegrid.iml" />
       <module fileurl="file://$PROJECT_DIR$/libprint/libprint.iml" filepath="$PROJECT_DIR$/libprint/libprint.iml" />
-      <module fileurl="file://$PROJECT_DIR$/annotationprocessor/processor/processor.iml" filepath="$PROJECT_DIR$/annotationprocessor/processor/processor.iml" />
       <module fileurl="file://$PROJECT_DIR$/retrofit/retrofit.iml" filepath="$PROJECT_DIR$/retrofit/retrofit.iml" />
     </modules>
   </component>

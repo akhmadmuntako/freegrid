@@ -1,25 +1,32 @@
-package com.example.annotationprocessor;
+package com.example;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.tools.JavaFileObject;
 
-@SupportedAnnotationTypes("com.example.annotationprocessor.checkFlag.java")
+@SupportedAnnotationTypes("com.example.checkFlag")
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class CustomAnnotationProcessor extends AbstractProcessor{
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         StringBuilder builder = new StringBuilder()
-                .append("package com.example.annotationprocessor.generated;\n\n")
+                .append("package com.example.generated;\n\n")
                 .append("public class GeneratedClass {\n\n") // open class
                 .append("\tpublic String getMessage() {\n") // open method
                 .append("\t\treturn \"");
 
 
         // for each javax.lang.model.element.Element annotated with the CustomAnnotation
-        for (Element element : roundEnv.getElementsAnnotatedWith(CustomAnnotation.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(checkFlag.class)) {
             String objectType = element.getSimpleName().toString();
 
 
@@ -36,8 +43,7 @@ public class CustomAnnotationProcessor extends AbstractProcessor{
 
 
         try { // write the file
-            JavaFileObject source = processingEnv.getFiler().createSourceFile("com.example.annotationprocessor.generated.GeneratedClass");
-
+            JavaFileObject source = processingEnv.getFiler().createSourceFile("com.example.generated.GeneratedClass");
 
             Writer writer = source.openWriter();
             writer.write(builder.toString());
@@ -47,7 +53,6 @@ public class CustomAnnotationProcessor extends AbstractProcessor{
             // Note: calling e.printStackTrace() will print IO errors
             // that occur from the file already existing after its first run, this is normal
         }
-
 
         return true;
     }

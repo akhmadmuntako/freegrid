@@ -1,1 +1,1 @@
-include ':app', ':libprint', ':retrofit', ':espresso', ':processor', ':annotationprocessor'
+include ':app', ':libprint', ':retrofit', ':espresso', ':annotationprocessor'
